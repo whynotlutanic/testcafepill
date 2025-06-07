@@ -1,114 +1,216 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta charset="UTF-8">
   <title>منوی کافه</title>
   <style>
     body {
       font-family: sans-serif;
-      background-color: #f9f9f9;
-      color: #333;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
+      direction: rtl;
+      background: #fefefe;
+      margin: 30px;
     }
-    h1 {
+
+    h2 {
       text-align: center;
+      margin-top: 60px;
       color: #333;
     }
-    .item {
+
+    .cards {
       display: flex;
-      align-items: center;
-      background: #557cfc;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
     }
-    .item img {
-      width: 80px;
-      height: 80px;
-      border-radius: 8px;
+
+    .card {
+      width: 160px;
+      height: 220px;
+      background: #fff8f0;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card img {
+      width: 100%;
+      height: 70%;
       object-fit: cover;
-      margin-left: 15px;
     }
-    .info {
-      flex-grow: 1;
+
+    .card .info {
+      padding: 10px;
+      text-align: center;
     }
-    .name {
+
+    .info h3 {
+      margin: 5px 0;
+      font-size: 16px;
+    }
+
+    .info .price {
+      color: #d2691e;
       font-weight: bold;
-      font-size: 18px;
     }
-    .price {
-      color: #888;
-      margin-top: 5px;
+
+    .modal {
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .modal-content {
+      background: white;
+      width: 80%;
+      max-width: 700px;
+      display: flex;
+      padding: 20px;
+      border-radius: 12px;
+      gap: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .modal img {
+      width: 50%;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .modal .details {
+      width: 50%;
+      text-align: right;
+    }
+
+    .modal .details h2 {
+      margin-top: 0;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 30px;
+      cursor: pointer;
+      color: white;
     }
   </style>
 </head>
 <body>
 
-  <h1>منوی کافه</h1>
+<h1 style="text-align: center">منوی کافه پیل</h1>
 
-  <h2>🍹 نوشیدنی‌ها</h2>
-  
-  <div class="item">
-    <img src="https://i.imgur.com/4X0eH2P.jpg" alt="آیس کافی">
-    <div class="info">
-      <div class="name">آیس کافی</div>
-      <div class="price">۶۵٫۰۰۰ تومان</div>
+
+<div class="cards">
+  <script>
+    const data = {
+      'نوشیدنی‌های گرم': [
+        ['قهوه اسپرسو', '15,000 تومان', 'این قهوه قوی و خوش‌عطر برای شروع روز عالیه.', 'https://cdn-icons-png.flaticon.com/512/3103/3103446.png'],
+        ['لاته', '20,000 تومان', 'لاته با شیر تازه و فوم نرم.', 'https://cdn-icons-png.flaticon.com/512/2909/2909769.png'],
+        ['کاپوچینو', '22,000 تومان', 'کاپوچینو کلاسیک با شیر کف کرده.', 'https://cdn-icons-png.flaticon.com/512/3402/3402147.png'],
+        ['موکا', '25,000 تومان', 'ترکیب شکلات و قهوه اسپرسو.', 'https://cdn-icons-png.flaticon.com/512/2498/2498580.png'],
+        ['آمریکانو', '18,000 تومان', 'قهوه رقیق با طعمی خاص.', 'https://cdn-icons-png.flaticon.com/512/1995/1995651.png'],
+        ['چای سبز', '12,000 تومان', 'چای سبز آرام‌بخش و سالم.', 'https://cdn-icons-png.flaticon.com/512/4264/4264752.png'],
+        ['چای ماسالا', '20,000 تومان', 'چای ادویه‌دار سنتی.', 'https://cdn-icons-png.flaticon.com/512/2553/2553691.png'],
+        ['هات چاکلت', '23,000 تومان', 'شکلات داغ با شیر تازه.', 'https://cdn-icons-png.flaticon.com/512/3075/3075977.png'],
+        ['نسکافه', '17,000 تومان', 'قهوه فوری محبوب.', 'https://cdn-icons-png.flaticon.com/512/2885/2885427.png'],
+        ['قهوه فرانسه', '16,000 تومان', 'قهوه‌ای سبک و ملایم.', 'https://cdn-icons-png.flaticon.com/512/3103/3103446.png']
+      ],
+      'نوشیدنی‌های سرد': [
+        ['آیس لاته', '25,000 تومان', 'قهوه سرد با شیر.', 'https://cdn-icons-png.flaticon.com/512/1046/1046898.png'],
+        ['شیک شکلات', '30,000 تومان', 'شیک شکلاتی خنک و خوشمزه.', 'https://cdn-icons-png.flaticon.com/512/1046/1046910.png'],
+        ['آب پرتقال طبیعی', '20,000 تومان', 'آب پرتقال تازه.', 'https://cdn-icons-png.flaticon.com/512/2965/2965567.png'],
+        ['موهیتو', '28,000 تومان', 'نوشیدنی نعناع و لیمو.', 'https://cdn-icons-png.flaticon.com/512/2909/2909761.png'],
+        ['لیموناد', '22,000 تومان', 'نوشیدنی ترش و شیرین.', 'https://cdn-icons-png.flaticon.com/512/1046/1046916.png'],
+        ['آیس موکا', '29,000 تومان', 'قهوه سرد شکلاتی.', 'https://cdn-icons-png.flaticon.com/512/3063/3063786.png'],
+        ['میلک شیک توت فرنگی', '31,000 تومان', 'شیک با طعم توت.', 'https://cdn-icons-png.flaticon.com/512/1046/1046869.png'],
+        ['آب سیب', '21,000 تومان', 'نوشیدنی طبیعی سیب.', 'https://cdn-icons-png.flaticon.com/512/2965/2965566.png'],
+        ['آب هندوانه', '23,000 تومان', 'نوشیدنی تابستانی محبوب.', 'https://cdn-icons-png.flaticon.com/512/3075/3075978.png'],
+        ['آیس چای', '24,000 تومان', 'چای سرد با یخ.', 'https://cdn-icons-png.flaticon.com/512/1046/1046834.png']
+      ],
+      'کیک‌ها': [
+        ['کیک شکلاتی', '30,000 تومان', 'کیک شکلاتی نرم و لذیذ با شکلات بلژیکی.', 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png'],
+        ['چیزکیک توت‌فرنگی', '32,000 تومان', 'چیزکیک با رویه توت.', 'https://cdn-icons-png.flaticon.com/512/1046/1046798.png'],
+        ['کیک ردولوت', '35,000 تومان', 'کیک مخملی با خامه.', 'https://cdn-icons-png.flaticon.com/512/1046/1046821.png'],
+        ['کیک وانیلی', '28,000 تومان', 'کیک ساده و خوشمزه.', 'https://cdn-icons-png.flaticon.com/512/1046/1046812.png'],
+        ['کاپ‌کیک شکلاتی', '18,000 تومان', 'کاپ کیک کوچک شکلاتی.', 'https://cdn-icons-png.flaticon.com/512/1046/1046815.png'],
+        ['کیک موزی', '27,000 تومان', 'کیک سبک با طعم موز.', 'https://cdn-icons-png.flaticon.com/512/1046/1046854.png'],
+        ['کیک پرتقالی', '29,000 تومان', 'کیک خوش‌طعم با پرتقال.', 'https://cdn-icons-png.flaticon.com/512/1046/1046816.png'],
+        ['تارت سیب', '34,000 تومان', 'تارت گرم و خوشمزه.', 'https://cdn-icons-png.flaticon.com/512/1046/1046805.png'],
+        ['پای لیمو', '31,000 تومان', 'دسر با طعم لیمو.', 'https://cdn-icons-png.flaticon.com/512/1046/1046822.png'],
+        ['براونی', '33,000 تومان', 'براونی شکلاتی خوشمزه.', 'https://cdn-icons-png.flaticon.com/512/1046/1046791.png']
+      ],
+      'ساندویچ‌ها': [
+        ['ساندویچ مرغ', '40,000 تومان', 'مرغ گریل شده با سبزیجات.', 'https://cdn-icons-png.flaticon.com/512/1046/1046877.png'],
+        ['ساندویچ استیک', '50,000 تومان', 'استیک لذیذ و گرم.', 'https://cdn-icons-png.flaticon.com/512/1046/1046875.png'],
+        ['ساندویچ تن ماهی', '37,000 تومان', 'تن ماهی با نان تازه.', 'https://cdn-icons-png.flaticon.com/512/1046/1046847.png'],
+        ['ساندویچ کبابی', '45,000 تومان', 'گوشت کبابی همراه با سبزیجات.', 'https://cdn-icons-png.flaticon.com/512/1046/1046867.png'],
+        ['ساندویچ تخم‌مرغ', '32,000 تومان', 'ساده و مقوی.', 'https://cdn-icons-png.flaticon.com/512/1046/1046872.png'],
+        ['ساندویچ فلافل', '28,000 تومان', 'فلافل ترد با سس.', 'https://cdn-icons-png.flaticon.com/512/1046/1046871.png'],
+        ['ساندویچ پنیر', '33,000 تومان', 'پنیر و سبزی تازه.', 'https://cdn-icons-png.flaticon.com/512/1046/1046849.png'],
+        ['ساندویچ ترکی', '39,000 تومان', 'گوشت دودی و خیارشور.', 'https://cdn-icons-png.flaticon.com/512/1046/1046856.png'],
+        ['ساندویچ سبزیجات', '30,000 تومان', 'گزینه گیاهی.', 'https://cdn-icons-png.flaticon.com/512/1046/1046852.png'],
+        ['ساندویچ پنیری گریل شده', '36,000 تومان', 'پنیر گریل شده با نان تست.', 'https://cdn-icons-png.flaticon.com/512/1046/1046870.png']
+      ]
+    };
+
+    for (const [section, items] of Object.entries(data)) {
+      document.write(`<h2>${section}</h2><div class='cards'>`);
+      for (const [title, price, desc, img] of items) {
+        document.write(`
+          <div class="card" onclick="openModal('${title}', '${price}', '${desc}', '${img}')">
+            <img src="${img}" alt="${title}" />
+            <div class="info">
+              <h3>${title}</h3>
+              <div class="price">${price}</div>
+            </div>
+          </div>
+        `);
+      }
+      document.write('</div>');
+    }
+  </script>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+  <span class="close" onclick="closeModal()">×</span>
+  <div class="modal-content">
+    <img id="modalImage" src="" alt="..." />
+    <div class="details">
+      <h2 id="modalTitle">...</h2>
+      <h4 id="modalPrice">...</h4>
+      <p id="modalDesc">...</p>
     </div>
   </div>
+</div>
 
-  <div class="item">
-    <img src="https://i.imgur.com/6bDkN9Q.jpg" alt="موهیتو لیمویی">
-    <div class="info">
-      <div class="name">موهیتو لیمویی</div>
-      <div class="price">۷۰٫۰۰۰ تومان</div>
-    </div>
-  </div>
+<script>
+  function openModal(title, price, desc, imgSrc) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalPrice').textContent = price;
+    document.getElementById('modalDesc').textContent = desc;
+    document.getElementById('modalImage').src = imgSrc;
+    document.getElementById('modal').style.display = 'flex';
+  }
 
-  <div class="item">
-    <img src="https://i.imgur.com/Y6zZQOR.jpg" alt="چای ماسالا">
-    <div class="info">
-      <div class="name">چای ماسالا</div>
-      <div class="price">۵۵٫۰۰۰ تومان</div>
-    </div>
-  </div>
-
-  <div class="item">
-    <img src="https://i.imgur.com/cfHruaO.jpg" alt="اسپرسو سینگل">
-    <div class="info">
-      <div class="name">اسپرسو سینگل</div>
-      <div class="price">۴۵٫۰۰۰ تومان</div>
-    </div>
-  </div>
-
-  <div class="item">
-    <img src="https://i.imgur.com/9NvK0Dl.jpg" alt="لاته کاراملی">
-    <div class="info">
-      <div class="name">لاته کاراملی</div>
-      <div class="price">۶۵٫۰۰۰ تومان</div>
-    </div>
-  </div>
-
-  <h2>🍰 کیک‌ها</h2>
-
-  <div class="item">
-    <img src="https://i.imgur.com/6y8sKXP.jpg" alt="کیک شکلاتی">
-    <div class="info">
-      <div class="name">کیک شکلاتی</div>
-      <div class="price">۸۵٫۰۰۰ تومان</div>
-    </div>
-  </div>
-
-  <div class="item">
-    <img src="https://i.imgur.com/Tv5W3PQ.jpg" alt="چیزکیک بلوبری">
-    <div class="info">
-      <div class="name">چیزکیک بلوبری</div>
-      <div class="price">۹۰٫۰۰۰ تومان</div>
-    </div>
-  </div>
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+</script>
 
 </body>
 </html>
